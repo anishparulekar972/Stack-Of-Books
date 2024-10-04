@@ -1,12 +1,11 @@
+version: '3'
+
 services:
   web:
     build: .
     ports:
-      - "8000:5000"
-    develop:
-      watch:
-        - action: sync
-          path: .
-          target: /code
-  redis:
-    image: "redis:alpine"
+      - "8000:5000" # Map port 8000 on the host to port 5000 in the container
+    volumes:
+      - .:/usr/src/app  # Sync current directory with container
+    environment:
+      - NODE_ENV=development
