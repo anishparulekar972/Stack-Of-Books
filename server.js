@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-const port = 5000;
+const portInput = 5000;
+const portOutput = 8000;
 
 app.get('/', (req, res) => {
-  res.send('Hello, brother!, Welcome to the server!');
+  res.send('Hello, Brother!, Welcome to the server!');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(portInput, () => {
+  console.log(`Server is running on http://localhost:${portOutput}`);
 });

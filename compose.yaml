@@ -4,8 +4,17 @@ services:
   web:
     build: .
     ports:
-      - "8000:5000" # Map port 8000 on the host to port 5000 in the container
+      - "8000:5000"
     volumes:
-      - .:/usr/src/app  # Sync current directory with container
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
       - NODE_ENV=development
+    depends_on:
+      - redis  # Ensure Redis service starts before web
+
+  redis:
+    image: "redis:alpine"  # Use Redis Alpine for a lightweight image
+    ports:
+      - "6379:6379"  # Redis default port
+
