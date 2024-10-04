@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 # Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
+RUN npm install express
 
 # Install Redis client for Node.js
 RUN npm install redis
