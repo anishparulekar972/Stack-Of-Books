@@ -5,7 +5,11 @@ services:
     build: .
     ports:
       - "8000:5000"
-  
+    develop:
+      - action: sync
+        path: .
+        target: .
+        
     environment:
       - NODE_ENV=development
     depends_on:
