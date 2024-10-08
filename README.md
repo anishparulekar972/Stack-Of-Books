@@ -6,6 +6,7 @@ Development Tools
 Visual Studio Code - Primary IDE for development
 Git - Version control system
 GitHub - Code repository and collaboration platform
+Docker - For local web development and running local Redis noSQL database
 
 Frontend
 
@@ -19,8 +20,16 @@ Node.js - JavaScript runtime for server-side development
 
 Database
 
-NoSQL database (specific implementation to be determined)
+NoSQL database - Redis
 
 AI Integration
 
 AI technology for image processing and book recommendations (specific implementation to be determined)
+
+# For Running the Code on Local Computer: 
+
+1. Make sure Docker is downloaded and Open
+2. Clone the repository
+3. Open Terminal or powershell and navigate to the project directory: ```bash cd Stack-Of-Books
+4. docker build then docker up
+5. Localhost:8000
