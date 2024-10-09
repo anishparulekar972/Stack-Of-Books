@@ -1,18 +1,13 @@
 version: '3'
-
 services:
-  web:
-    build: .
+  react-app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     ports:
-      - "8000:5000"
-  
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
     environment:
-      - NODE_ENV=development
-    depends_on:
-      - redis  # Ensure Redis service starts before web
-
-  redis:
-    image: "redis:alpine"  # Use Redis Alpine for a lightweight image
-    ports:
-      - "6379:6379"  # Redis default port
-
+      - CHOKIDAR_USEPOLLING=true
