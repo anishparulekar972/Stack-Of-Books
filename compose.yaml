@@ -2,13 +2,13 @@ version: '3'
 
 services:
   web:
+    image: "ubuntu"
     build: .
+    command: tail -f /dev/null
     ports:
       - "8000:5000"
-    develop:
-      - action: sync
-        path: .
-        target: .
+    volumes:
+      - ./:/tmp/code
         
     environment:
       - NODE_ENV=development
