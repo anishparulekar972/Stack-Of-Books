@@ -1,23 +1,23 @@
-# syntax=docker/dockerfile:1
-FROM node:20-alpine
+# Use the official Node.js image as the base image
+FROM node:18
 
-# Set working directory
-WORKDIR /usr/src/app
+# Set the working directory in the container
+WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy the package.json and package-lock.json files
 COPY package*.json ./
+
+# Install the dependencies
 RUN npm install
-RUN npm install express
 
-# Install Redis client for Node.js
-RUN npm install redis
-
-# Copy the rest of the application
+# Copy the rest of the application code
 COPY . .
 
-# Expose the port
-EXPOSE 5000
+# Build the React app
+RUN npm run build
 
-# Command to run the application
-CMD ["npm", "start"]
+# Expose the port the app will run on
+EXPOSE 3000
 
+# Start the app using serve
+CMD ["npx", "serve", "-s", "build", "-l", "3000"]
