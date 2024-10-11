@@ -1,5 +1,5 @@
 body {
-  background-color: #121212; /* Dark background */
+  background-color: #f1efef; /* Dark background */
   color: #ffffff; /* White text */
   font-family: Arial, sans-serif;
   margin: 0;
@@ -14,6 +14,7 @@ body {
 }
 
 h1 {
+  color: #4CAF50;
   margin-bottom: 20px;
 }
 
@@ -21,12 +22,29 @@ h1 {
   margin-bottom: 20px;
 }
 
+p {
+  color: #474747; /* Gray color for the paragraph text */
+}
+
 input[type="text"] {
+  background-color: #5c5c5c;
+  color: #ffffff;
   padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   width: 300px;
   font-size: 16px;
+}
+
+input[type="text"]::placeholder {
+  color: #ffffff; /* Lighter gray for placeholder text */
+}
+
+.container img {
+  max-width: 250px; /* Adjust this value as needed */
+  height: auto; /* This maintains the aspect ratio */
+  display: block;
+  margin: 0 auto; /* Center the image */
 }
 
 .button-container {
@@ -39,13 +57,76 @@ button {
   background-color: #4CAF50; /* Green background */
   color: white; /* White text */
   border: none;
-  padding: 10px 15px;
+  padding: 10px 20px;
   margin: 5px;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
 
 button:hover {
   background-color: #45a049; /* Darker green on hover */
+}
+
+.footer {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  bottom: 0;
+  left: 0;
+  width: 97.9%;
+  text-align: center;
+  padding: 10px;
+  background-color: #e0d8d8;
+  color: #fff;
+}
+
+.footer ul {
+  list-style: none;
+  display: flex;
+  justify-content: center; /* Center the links horizontally */
+  margin: 0;
+  max-width: fit-content;
+  padding: 0;
+  max-width: 80%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer li {
+  margin: 5px 0; /* Add spacing between links */
+}
+
+.footer a {
+  color: #474747; /* Link color */
+  text-decoration: none;
+}
+
+.company, .work-with-us, .connect {
+  flex: 1; /* Ensure equal width for sections */
+}
+
+.connect h3{
+  color: #474747;
+}
+
+.social-icons {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.social-icons li {
+  margin: 0 5px; /* Adjust spacing between icons */
+}
+
+.social-icons a {
+  color: #fff; /* Icon color */
+  font-size: 20px; /* Adjust icon size */
+}
+
+.footer p{
+  color: #474747;
+  margin: 0;
 }
