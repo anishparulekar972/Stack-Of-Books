@@ -1,18 +1,42 @@
-import React from 'react';
+import { React, useState } from 'react';
 import './App.css';
 import booksLogo from './assets/Stack_of_Books_Logo.png';
 
+
 function App() {
+    const [isbn, setIsbn] = useState("");
+
+    const handleInputChange = (event) => {
+        setIsbn(event.target.value);
+    };
+
+    const handleSubmit = () => {
+        //console.log(isbn);
+        fetch('http://localhost:5000/api/log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: isbn
+        })
+          .then((response) => response.json())
+          .then((result) => {
+              console.log(result.message);
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+    };
   return (
     <div className="container">
       <h1>Stack Of Books</h1>
       <img src={booksLogo} alt="Books logo" />
       <p>You can scan ISBN below to get the book information.</p>
       <div className="input-container">
-        <input type="text" placeholder="Please Enter ISBN" />
+        <input id="ISBNInput" type="text" onChange={handleInputChange} placeholder="Please Enter ISBN" />
       </div>
       <div className="button-container">
-        <button>Scan ISBN</button>
+        <button onClick={handleSubmit}>Scan ISBN</button>
       </div>
       <footer className="footer">
         <ul>
