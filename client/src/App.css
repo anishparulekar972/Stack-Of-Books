@@ -68,6 +68,44 @@ button:hover {
   background-color: #45a049; /* Darker green on hover */
 }
 
+.book-details {
+   /* Dark background to contrast with text */
+  padding: 20px;
+  border-radius: 10px;
+  color: #ffffff; /* White text */
+  margin: 15px 0; /* Spacing between details */
+  box-shadow: 0 4px 8px rgba(105, 105, 105, 0.2); /* Subtle shadow for depth */
+}
+
+
+.book-details h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 10px 0;
+  color: #44b848; /* Green for headings */
+}
+
+.close-icon-left {
+  position: fixed;
+  top: 80px;  /* Adjust as needed to control vertical positioning */
+  left: 20px; /* Adjust as needed to control horizontal positioning */
+  z-index: 1000; /* Ensure it appears above other content */
+  padding: 8px;
+  cursor: pointer;
+}
+
+.close-icon-left:hover {
+  background-color: rgba(201, 5, 5, 0.658); /* Light red hover effect */
+  border-radius: 50%;
+}
+
+
+
+
+
+
+
+
 .footer {
   position: absolute;
   display: flex;
@@ -102,29 +140,6 @@ button:hover {
   text-decoration: none;
 }
 
-.company, .work-with-us, .connect {
-  flex: 1; /* Ensure equal width for sections */
-}
-
-.connect h3{
-  color: #474747;
-}
-
-.social-icons {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.social-icons li {
-  margin: 0 5px; /* Adjust spacing between icons */
-}
-
-.social-icons a {
-  color: #fff; /* Icon color */
-  font-size: 20px; /* Adjust icon size */
-}
 
 .footer p{
   color: #474747;
