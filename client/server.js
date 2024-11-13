@@ -3,6 +3,9 @@ const redis = require('redis');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const app = express();
 const PORT = 5000;
 
@@ -83,6 +86,47 @@ app.post('/api/get-book', async (req, res) => {
 //     });
 // });
 
+app.get('http://localhost:5000/api/login'), (req, res) => {
+	redisClient.get(req.body.username, (err, data) => {
+		if (err) {
+			return res.status(500).json({message: 'Error fetching data'});
+		}
+		res.status(200).json({data: data || 'No data found'});
+	}
+	passwordInput = req.body.password;
+	bcrypt.genSalt(saltRounds, function(err, salt){
+		bcrypt.hash(passwordInput, salt, function(err, hash){
+			if (hash == data) {
+				req.session.loggedin = true;
+				req.session.username = req.body.username;
+			} else {
+				response.send('Incorrect password');
+			}
+		});
+	});
+}
+
+app.get('http://localhost:5000/api/signup'), (req, res) => {
+	redisClient.get(req.body.username, (req, res) => {
+		if (err) {
+			//no user exists with this username so make a new user
+		} else {
+			return res.status(500).json({message: 'User already exists'});
+		}
+	});
+	passwordInput = req.body.password;
+	bcrypt.genSalt(saltRounds, function(err, salt){
+		bcrypt.hash(passwordInput, salt, function(err, hash){
+			redisCLient.set(req.body.username, hash, (err) => {
+				if (err) {
+					return res.status(500).json({ message: 'Error logging data' });
+				}
+				res.status(200).json({ message: 'Account created' });
+			})
+		});
+	});
+}
+
 // API to log data to Redis
 app.post('/api/log', (req, res) => {
     const { data } = req.body;
@@ -111,3 +155,4 @@ process.on('exit', () => {
 app.listen(PORT, () => {
     console.log(`Express Server running on port ${PORT}`);
 });
+

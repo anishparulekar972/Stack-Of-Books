@@ -6,16 +6,44 @@ import { ActionIcon } from '@mantine/core';
 import { IconSquareXFilled, IconMenu2 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
+
+function LoginModal({ show, onClose }) {
+  if (!show) return null;
+
+  return (
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <h2>Login</h2>
+        <input type="text" placeholder="Username" />
+        <input type="password" placeholder="Password" />
+        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleSignup}>Sign Up</button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [isbn, setIsbn] = useState("");
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [bookData, setBookdata] = useState({});
   const [errorMsg, setErrorMsg] = useState(""); // State for error message
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleInputChange = (event) => {
     setIsbn(event.target.value);
     setErrorMsg(""); // Clear error message on input change
+  };
+
+  const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -51,8 +79,40 @@ function App() {
     }
   };
 
+  const handleLogin = async () => {
+        await fetch('http://localhost:5000/api/login', {
+            method: 'POST',
+            body: {username, password}
+        })
+          .then((response) => response.json())
+          .then((result) => {
+              console.log(result.message);
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+    };
+
+    const handleSignup = async () => {
+        await fetch('http://localhost:5000/api/signup', {
+            method: 'POST',
+            body: {username, password}
+        })
+          .then((response) => response.json())
+          .then((result) => {
+              console.log(result.message);
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+    };
+
   return (
     <div className="container">
+      <div className="button-container">
+        <button onClick={openModal}>Login</button>
+      </div>
+      <LoginModal show={isModalOpen} onClose={closeModal} />
       <div className="menu-container">
         <ActionIcon
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -122,16 +182,3 @@ function App() {
           </div>
         </>
       )}
-
-      <footer className="footer">
-        <ul>
-          <li><a href="/">Our Group</a></li>
-          <Link to="/about">About us</Link>
-        </ul>
-        <p>&copy; 2024 Stack Of Books</p>
-      </footer>
-    </div>
-  );
-}
-
-export default App;
