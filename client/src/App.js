@@ -3,7 +3,7 @@ import './App.css';
 import booksLogo from './assets/Stack_of_Books_Logo.png';
 import Axios from 'axios';
 import { ActionIcon } from '@mantine/core';
-import { IconSquareXFilled } from '@tabler/icons-react';
+import { IconSquareXFilled, IconMenu2 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [bookData, setBookdata] = useState({});
   const [errorMsg, setErrorMsg] = useState(""); // State for error message
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleInputChange = (event) => {
     setIsbn(event.target.value);
@@ -52,6 +53,27 @@ function App() {
 
   return (
     <div className="container">
+      <div className="menu-container">
+        <ActionIcon
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          variant="outline"
+          color="green"
+          aria-label="Menu"
+          className="menu-icon"
+        >
+          <IconMenu2 style={{ width: '70%', height: '70%' }} stroke={1.5} />
+        </ActionIcon>
+        
+        {/* Menu Items */}
+        {isMenuOpen && (
+          <div className="menu-items">
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>Signup</Link>
+            <Link to="/about" onClick={() => setIsMenuOpen(false)}>About Us</Link>
+            <a href="#" onClick={() => setIsMenuOpen(false)}>Contact</a>
+            <a href="#" onClick={() => setIsMenuOpen(false)}>Login</a>
+          </div>
+        )}
+      </div>
       <h1>Stack Of Books</h1>
       {isBookOpen ? (
         <>
