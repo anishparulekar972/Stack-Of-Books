@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import AboutUs from './Aboutus';
+
 import reportWebVitals from './reportWebVitals';
 import { createTheme, MantineProvider } from '@mantine/core';
 
@@ -12,9 +15,14 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <MantineProvider theme={theme}>
-    <App />
-    </MantineProvider>
+    <BrowserRouter>
+      <MantineProvider theme={theme}>
+        <Routes>
+          <Route path="/" element={<App />} /> {/* Home page */}
+          <Route path="/about" element={<AboutUs />} /> {/* About Us page */}
+        </Routes>
+      </MantineProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
