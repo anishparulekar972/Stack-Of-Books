@@ -2,7 +2,7 @@
 FROM node:18
 
 # Set the working directory in the container
-WORKDIR .
+WORKDIR ./src
 
 # Copy the package.json and package-lock.json files
 COPY package*.json ./
@@ -13,14 +13,12 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-RUN npm install -g serve
-
 # Build the React app for production
-# RUN npm run build
+RUN npm run build
 
 # Expose the port that serve will run on
 EXPOSE 3000
 EXPOSE 5000
 
 # Serve the build folder using serve and express server
-CMD ["npx", "concurrently", "\"npm start\"", "\"node server.js\""]
+CMD ["node", "../server.js", "&&", "serve", "-s", "build", "-l", "3000"]
