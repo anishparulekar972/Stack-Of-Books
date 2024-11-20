@@ -1,0 +1,91 @@
+/* src/About.css */
+.about-container {
+    padding: 40px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;  /* Added this */
+}
+
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;  /* Increased gap between cards */
+}
+
+.team-member {
+    border: 1px solid #ddd;
+    padding: 20px;  /* Increased padding */
+    border-radius: 12px;  /* Slightly larger border radius */
+    text-align: center;
+    width: 300px;  /* Increased width */
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* Added subtle shadow */
+    transition: transform 0.2s;  /* Smooth hover effect */
+}
+
+.team-member:hover {
+    transform: translateY(-5px);  /* Slight lift on hover */
+}
+
+.member-photo {
+    width: 250px;  /* Increased image size */
+    height: 250px;  /* Made it square */
+    border-radius: 50%;
+    margin-bottom: 20px;  /* Increased margin */
+    object-fit: cover;  /* Ensures image covers the area properly */
+}
+
+h2 {
+    margin: 15px 0 10px;  /* Increased margins */
+    color: #6cd642;
+    font-size: 24px;  /* Larger font size */
+}
+
+p {
+    color: #6cd642;
+    font-size: 18px;  /* Larger font size */
+    margin-top: 10px;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #6cd642;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: #5bb938;
+}
+
+/* Added media query for responsive design */
+@media (max-width: 768px) {
+    .team-member {
+        width: 250px;
+    }
+    
+    .member-photo {
+        width: 200px;
+        height: 200px;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    p {
+        font-size: 16px;
+    }
+}

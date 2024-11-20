@@ -1,0 +1,17 @@
+[
+    {
+      "isbn": "9780132350884",
+      "name": "Clean Code: A Handbook of Agile Software Craftsmanship",
+      "author": "Robert C. Martin"
+    },
+    {
+      "isbn": "9781491950296",
+      "name": "Designing Data-Intensive Applications",
+      "author": "Martin Kleppmann"
+    },
+    {
+      "isbn": "9780137081073",
+      "name": "The Pragmatic Programmer",
+      "author": "Andrew Hunt, David Thomas"
+    }
+  ]
