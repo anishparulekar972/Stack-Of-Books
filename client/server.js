@@ -108,6 +108,66 @@ app.get('/api/last-logged', (req, res) => {
     });
 });
 
+// API to add book to user's library
+app.post('/api/add', async (req, res) => {
+    try {
+        const { userId, book } = req.body;
+        
+        if (!userId || !book || !book.isbn) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // Get user's library from Redis
+        const libraryData = await redisClient.get(`library:${userId}`);
+        let library = [];
+        
+        if (libraryData) {
+            library = JSON.parse(libraryData);
+        }
+
+        // Check if book already exists in library
+        if (library.some(existingBook => existingBook.isbn === book.isbn)) {
+            return res.status(400).json({ message: 'Book already in library' });
+        }
+
+        // Add book to library
+        library.push({
+            isbn: book.isbn,
+            title: book.title,
+            author: book.author,
+            addedAt: new Date().toISOString()
+        });
+
+        // Save updated library back to Redis
+        await redisClient.set(`library:${userId}`, JSON.stringify(library));
+        console.log(`Library for user ${userId}:`, library);
+        res.json({ success: true, message: 'Book added to library successfully' });
+
+    } catch (error) {
+        console.error('Error in /api/library/add:', error);
+        res.status(500).json({ message: 'Error saving to library' });
+    }
+});
+
+// API to get user's library
+app.get('/api/library/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        const libraryData = await redisClient.get(`library:${userId}`);
+        const library = libraryData ? JSON.parse(libraryData) : [];
+        
+        res.json(library);
+    } catch (error) {
+        console.error('Error in /api/library/:userId:', error);
+        res.status(500).json({ message: 'Error accessing library' });
+    }
+});
+
 // Close Redis client on exit
 process.on('exit', () => {
     redisClient.quit();

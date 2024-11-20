@@ -11,15 +11,23 @@ function App() {
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [bookData, setBookdata] = useState({});
   const [errorMsg, setErrorMsg] = useState(""); // State for error message
+  const [successMsg, setSuccessMsg] = useState(""); // State for success message
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleInputChange = (event) => {
-    setIsbn(event.target.value);
-    setErrorMsg(""); // Clear error message on input change
+    const value = event.target.value;
+    
+    // Only allow digits and 'X' at the end
+    if (value === '' || /^\d+X?$/.test(value)) {
+      setIsbn(value);
+      setErrorMsg(""); // Clear error message on valid input
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg(""); // Clear any previous error messages
+    setSuccessMsg(""); // Clear any previous success messages
 
     // Validation: Check if ISBN is empty
     if (!isbn.trim()) {
@@ -27,9 +35,9 @@ function App() {
       return;
     }
 
-    // Validation: Check if ISBN contains only numbers
-    if (!/^\d+$/.test(isbn)) {
-      setErrorMsg("ISBN must contain only numbers.");
+    // Validation: Check if ISBN contains only numbers and possibly 'X' at the end
+    if (!/^\d+X?$/.test(isbn)) {
+      setErrorMsg("ISBN must contain only numbers with optional 'X' at the end.");
       return;
     }
 
@@ -48,6 +56,28 @@ function App() {
     } catch (error) {
       console.error(error);
       setErrorMsg("An error occurred while fetching the book data. Please try again.");
+    }
+  };
+
+  const addToLibrary = async () => {
+    try {
+      // For now, using a hardcoded userId. In a real app, this would come from authentication
+      const userId = "user1";
+      const response = await Axios.post('http://localhost:5000/api/library/add', {
+        userId,
+        book: {
+          isbn,
+          title: bookData.title,
+          author: bookData.authors ? bookData.authors[0].name : "Unknown"
+        }
+      });
+      
+      setSuccessMsg("Book added to your library successfully!");
+      setTimeout(() => setSuccessMsg(""), 3000); // Clear success message after 3 seconds
+      
+    } catch (error) {
+      setErrorMsg(error.response?.data?.message || "Failed to add book to library");
+      setTimeout(() => setErrorMsg(""), 3000); // Clear error message after 3 seconds
     }
   };
 
@@ -83,6 +113,14 @@ function App() {
                 <h2>Book Name: {bookData.title}</h2>
                 <h2>Book Author: {bookData.authors ? bookData.authors[0].name : "Not Found"}</h2>
                 <h2>Book ISBN: {isbn}</h2>
+                <button 
+                  onClick={addToLibrary}
+                  className="add-to-library-btn"
+                >
+                  Add to Library
+                </button>
+                {successMsg && <div className="success-message">{successMsg}</div>}
+                {errorMsg && <div className="error-message">{errorMsg}</div>}
               </div>
               <ActionIcon
                 onClick={() => {
