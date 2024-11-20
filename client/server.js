@@ -11,14 +11,9 @@ app.use(cors({
 }));
 
 // Redis Client
-const redisClient = redis.createClient({
-    host: 'localhost',
-    port: 6379,
-});
+const redisClient = redis.createClient();
 
 // Ensure the client is connected before making any calls
-redisClient.connect().catch(console.error);
-
 redisClient.on('connect', () => {
     console.log('Connected to Redis');
 });
