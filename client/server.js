@@ -31,6 +31,7 @@ app.use(express.json());
 
 const booksFilePath = path.join(__dirname, 'src/', 'books.json');
 
+
 // Load books into Redis after client is connected
 redisClient.on('ready', () => {
     fs.readFile(booksFilePath, 'utf-8', (err, data) => {
@@ -92,15 +93,14 @@ app.get('http://localhost:5000/api/login'), (req, res) => {
 			return res.status(500).json({message: 'Error fetching data'});
 		}
 		res.status(200).json({data: data || 'No data found'});
-	}
+	});
 	passwordInput = req.body.password;
 	bcrypt.genSalt(saltRounds, function(err, salt){
 		bcrypt.hash(passwordInput, salt, function(err, hash){
 			if (hash == data) {
-				req.session.loggedin = true;
-				req.session.username = req.body.username;
+				return res.status(200).json({message: "login"})
 			} else {
-				response.send('Incorrect password');
+				return res.status(200).json({message: "incorrect");
 			}
 		});
 	});

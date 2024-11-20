@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import AboutUs from './Aboutus';
-
+import { AuthProvider } from './Contexts/AuthContext';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, MantineProvider } from '@mantine/core';
 
@@ -12,9 +12,11 @@ const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+   <AuthProvider>
     <BrowserRouter>
       <MantineProvider theme={theme}>
         <Routes>
@@ -23,6 +25,7 @@ root.render(
         </Routes>
       </MantineProvider>
     </BrowserRouter>
+   </AuthProvider>
   </React.StrictMode>
 );
 

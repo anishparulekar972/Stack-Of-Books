@@ -76,6 +76,20 @@ input[type="text"]::placeholder {
   color: #ffffff; /* Lighter gray for placeholder text */
 }
 
+input[type="password"] {
+  background-color: #5c5c5c;
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  border-radius: 25px;
+  width: 300px;
+  font-size: 16px;
+}
+
+input[type="password"]::placeholder {
+  color: #ffffff; /* Lighter gray for placeholder text */
+}
+
 .container img {
   max-width: 250px; /* Adjust this value as needed */
   height: auto; /* This maintains the aspect ratio */

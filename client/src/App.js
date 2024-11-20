@@ -1,39 +1,35 @@
-import { React, useState } from 'react';
+import { React, useState, useContext, createContext } from 'react';
+import axios, {isCancel, AxiosError} from 'axios';
 import './App.css';
 import booksLogo from './assets/Stack_of_Books_Logo.png';
 import Axios from 'axios';
 import { ActionIcon } from '@mantine/core';
 import { IconSquareXFilled, IconMenu2 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { AuthProvider } from './Contexts/AuthContext';
+import { useAuth } from './Contexts/AuthContext';
 
 
-function LoginModal({ show, onClose }) {
-  if (!show) return null;
 
-  return (
-    <div id="loginModal" class="modal">
-      <div class="modal-content">
-        <h2>Login</h2>
-        <input type="text" placeholder="Username" />
-        <input type="password" placeholder="Password" />
-        <button onClick={handleLogin}>Login</button>
-        <button onClick={handleSignup}>Sign Up</button>
-      </div>
-    </div>
-  );
-}
 
 function App() {
-  const [isbn, setIsbn] = useState("");
-  const [isBookOpen, setIsBookOpen] = useState(false);
-  const [bookData, setBookdata] = useState({});
-  const [errorMsg, setErrorMsg] = useState(""); // State for error message
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+    const [isbn, setIsbn] = useState("");
+    const [isBookOpen, setIsBookOpen] = useState(false);
+    const [bookData, setBookdata] = useState({});
+    const [errorMsg, setErrorMsg] = useState(""); // State for error message
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
-  const handleInputChange = (event) => {
+    const {
+        authUser,
+        setAuthUser,
+        isLoggedIn,
+        setIsLoggedIn
+    } = useAuth();
+
+    const handleInputChange = (event) => {
     setIsbn(event.target.value);
     setErrorMsg(""); // Clear error message on input change
   };
@@ -45,6 +41,26 @@ function App() {
   const handlePasswordChange = (event) => {
         setPassword(event.target.value);
   };
+
+  function LoginModal({ show, onClose }) {
+        if (!show) return null;
+
+        return (
+            <div id="loginModal" className="modal">
+                <div className="modal-content">
+                    <h1>Login</h1>
+                    <input type="text" onBlur={handleUsernameChange} placeholder="Username" defaultValue={username}/>
+                    <input type="password" onBlur={handlePasswordChange} placeholder="Password" defaultValue={password}/>
+                    <button onClick={handleLogin}>Login</button>
+                    <button onClick={handleSignup}>Sign Up</button>
+                    <button onClick={closeModal}>Close</button>
+                </div>
+            </div>
+        );
+    }
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,13 +96,23 @@ function App() {
   };
 
   const handleLogin = async () => {
-        await fetch('http://localhost:5000/api/login', {
+        await axios.post('http://127.0.0.1:5000/api/login', {
             method: 'POST',
             body: {username, password}
         })
           .then((response) => response.json())
           .then((result) => {
-              console.log(result.message);
+              result.json();
+              if (result.message == "login") {
+                  setIsLoggedIn(true);
+                  setAuthUser({
+                      name: {username}
+                  });
+                  closeModal();
+              } else {
+                  alert("Incorrect Password");
+              }
+              
           })
           .catch((error) => {
               console.error(error);
@@ -94,13 +120,18 @@ function App() {
     };
 
     const handleSignup = async () => {
-        await fetch('http://localhost:5000/api/signup', {
+        await axios.post('http://127.0.0.1:5000/api/signup', {
             method: 'POST',
             body: {username, password}
         })
           .then((response) => response.json())
           .then((result) => {
               console.log(result.message);
+              setIsLoggedIn(true);
+              setAuthUser({
+                  name: {username}
+              });
+              closeModal();
           })
           .catch((error) => {
               console.error(error);
@@ -108,6 +139,7 @@ function App() {
     };
 
   return (
+    <AuthProvider>
     <div className="container">
       <div className="button-container">
         <button onClick={openModal}>Login</button>
@@ -182,3 +214,12 @@ function App() {
           </div>
         </>
       )}
+        </ul>
+        <p>&copy; 2024 Stack Of Books</p>
+      </footer>
+    </div>
+    </AuthProvider>
+  );
+}
+
+export default App;
