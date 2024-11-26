@@ -92,15 +92,15 @@ app.post('/api/login'), (req, res) => {
 		bcrypt.genSalt(saltRounds, function(err, salt){
 			bcrypt.hash(passwordInput, salt, function(err, hash){
 				if (hash == data) {
-					return res.status(200).json({message: 'login'})
+					return res.status(200).send({message: 'login'})
 				} else {
-					return res.status(200).json({message: 'incorrect'});
+					return res.status(200).send({message: 'incorrect'});
 				}
 			});
 		});
 	} catch (err) {
 		//error means no user exists
-		return res.status(500).json({message: 'no user exists'})
+		return res.status(500).send({message: 'no user exists'})
 	}
 }
 
@@ -108,17 +108,17 @@ app.post('/api/signup'), (req, res) => {
 	try {
 		redisClient.get(req.body.name);
 		//if no error, user with that name already exists so a new account cannot be created
-		return res.status(500).json({message: 'user already exists'})
+		return res.status(500).send({message: 'user already exists'})
 	} catch (err) {
-		//if ther is an error, no user exists with that username, so make a new user in the database and store the hashed password
+		//if there is an error, no user exists with that username, so make a new user in the database and store the hashed password
 		passwordInput = req.body.pass;
 		bcrypt.genSalt(saltRounds, function(err, salt){
 			bcrypt.hash(passwordInput, salt, function(err, hash){
 				try {
 					redisCLient.set(req.body.name, hash);
-					return res.status(200).json({ message: 'Account created' });
+					return res.status(200).send({ message: 'Account created' });
 				} catch (err) {
-					return res.status(500).json({ message: 'Error logging data' });
+					return res.status(500).send({ message: 'Error logging data' });
 				}
 			});
 		});
