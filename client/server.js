@@ -9,9 +9,7 @@ const saltRounds = 10;
 const app = express();
 const PORT = 5000;
 
-app.use(cors({
-    origin: 'http://localhost:3000'
-}));
+app.use(cors());
 
 // Redis Client
 const redisClient = redis.createClient();
@@ -87,44 +85,45 @@ app.post('/api/get-book', async (req, res) => {
 //     });
 // });
 
-app.get('http://localhost:5000/api/login'), (req, res) => {
-	redisClient.get(req.body.username, (err, data) => {
-		if (err) {
-			return res.status(500).json({message: 'Error fetching data'});
-		}
-		res.status(200).json({data: data || 'No data found'});
-	});
-	passwordInput = req.body.password;
-	bcrypt.genSalt(saltRounds, function(err, salt){
-		bcrypt.hash(passwordInput, salt, function(err, hash){
-			if (hash == data) {
-				return res.status(200).json({message: "login"})
-			} else {
-				return res.status(200).json({message: "incorrect");
-			}
+app.post('/api/login'), (req, res) => {
+	try {
+		storedPassword = redisClient.get(req.body.name);
+		passwordInput = req.body.pass;
+		bcrypt.genSalt(saltRounds, function(err, salt){
+			bcrypt.hash(passwordInput, salt, function(err, hash){
+				if (hash == data) {
+					return res.status(200).json({message: 'login'})
+				} else {
+					return res.status(200).json({message: 'incorrect'});
+				}
+			});
 		});
-	});
+	} catch (err) {
+		//error means no user exists
+		return res.status(500).json({message: 'no user exists'})
+	}
 }
 
-app.get('http://localhost:5000/api/signup'), (req, res) => {
-	redisClient.get(req.body.username, (req, res) => {
-		if (err) {
-			//no user exists with this username so make a new user
-		} else {
-			return res.status(500).json({message: 'User already exists'});
-		}
-	});
-	passwordInput = req.body.password;
-	bcrypt.genSalt(saltRounds, function(err, salt){
-		bcrypt.hash(passwordInput, salt, function(err, hash){
-			redisCLient.set(req.body.username, hash, (err) => {
-				if (err) {
+app.post('/api/signup'), (req, res) => {
+	try {
+		redisClient.get(req.body.name);
+		//if no error, user with that name already exists so a new account cannot be created
+		return res.status(500).json({message: 'user already exists'})
+	} catch (err) {
+		//if ther is an error, no user exists with that username, so make a new user in the database and store the hashed password
+		passwordInput = req.body.pass;
+		bcrypt.genSalt(saltRounds, function(err, salt){
+			bcrypt.hash(passwordInput, salt, function(err, hash){
+				try {
+					redisCLient.set(req.body.name, hash);
+					return res.status(200).json({ message: 'Account created' });
+				} catch (err) {
 					return res.status(500).json({ message: 'Error logging data' });
 				}
-				res.status(200).json({ message: 'Account created' });
-			})
+			});
 		});
-	});
+	}
+	
 }
 
 // API to log data to Redis

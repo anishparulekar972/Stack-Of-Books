@@ -2,7 +2,6 @@ import { React, useState, useContext, createContext } from 'react';
 import axios, {isCancel, AxiosError} from 'axios';
 import './App.css';
 import booksLogo from './assets/Stack_of_Books_Logo.png';
-import Axios from 'axios';
 import { ActionIcon } from '@mantine/core';
 import { IconSquareXFilled, IconMenu2 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -79,7 +78,7 @@ function App() {
 
     try {
       // Use ISBN to search book by ISBN from openlibrary.org
-      const response = await Axios.get(
+      const response = await axios.get(
         `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=data&format=json`
       );
       // Check if book with ISBN exists
@@ -96,14 +95,14 @@ function App() {
   };
 
   const handleLogin = async () => {
-        await axios.post('http://127.0.0.1:5000/api/login', {
-            method: 'POST',
-            body: {username, password}
+        await axios.post('http://localhost:5000/api/login', {
+            name: username,
+            pass: password
         })
           .then((response) => response.json())
           .then((result) => {
               result.json();
-              if (result.message == "login") {
+              if (result.message === "login") {
                   setIsLoggedIn(true);
                   setAuthUser({
                       name: {username}
@@ -120,9 +119,9 @@ function App() {
     };
 
     const handleSignup = async () => {
-        await axios.post('http://127.0.0.1:5000/api/signup', {
-            method: 'POST',
-            body: {username, password}
+        await axios.post('http://localhost:5000/api/signup',  {
+            name: username,
+            pass: password
         })
           .then((response) => response.json())
           .then((result) => {
@@ -139,10 +138,15 @@ function App() {
     };
 
   return (
-    <AuthProvider>
+   <AuthProvider>
     <div className="container">
       <div className="button-container">
         <button onClick={openModal}>Login</button>
+        {isLoggedIn ? (
+            <p> logged in </p>
+        ) : (
+            <p> logged out </p>
+        )}
       </div>
       <LoginModal show={isModalOpen} onClose={closeModal} />
       <div className="menu-container">
@@ -214,11 +218,11 @@ function App() {
           </div>
         </>
       )}
-        </ul>
+      <footer>
         <p>&copy; 2024 Stack Of Books</p>
       </footer>
     </div>
-    </AuthProvider>
+   </AuthProvider>
   );
 }
 
