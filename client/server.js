@@ -9,19 +9,33 @@ const saltRounds = 10;
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+app.use(cors({
+	origin: "http://localhost:3000"
+}));
 
 // Redis Client
-const redisClient = redis.createClient();
+const redisClient = redis.createClient({
+	url:  `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+});
+
+(async () => {
+	redisClient.on('error', (err) => {
+		console.log('Redis error:', err);
+	});
+	await redisClient.connect();
+})();
+
+// if (!redisClient.isReady) {
+	// console.log('redis error');
+// }
+
 
 // Ensure the client is connected before making any calls
-redisClient.on('connect', () => {
-    console.log('Connected to Redis');
-});
+// redisClient.on('connect', () => {
+    // console.log('Connected to Redis');
+// });
 
-redisClient.on('error', (err) => {
-    console.log('Redis error:', err);
-});
+
 
 // To parse JSON
 app.use(express.urlencoded({ extended: false}));
@@ -85,9 +99,9 @@ app.post('/api/get-book', async (req, res) => {
 //     });
 // });
 
-app.post('/api/login'), (req, res) => {
+app.post('/api/login'), async (req, res) => {
 	try {
-		storedPassword = redisClient.get(req.body.name);
+		storedPassword = await redisClient.get(req.body.name);
 		passwordInput = req.body.pass;
 		bcrypt.genSalt(saltRounds, function(err, salt){
 			bcrypt.hash(passwordInput, salt, function(err, hash){
@@ -104,18 +118,19 @@ app.post('/api/login'), (req, res) => {
 	}
 }
 
-app.post('/api/signup'), (req, res) => {
+app.post('/api/signup'), async (req, res) => {
+	console.log('sign up request received');
 	try {
-		redisClient.get(req.body.name);
+		await redisClient.get(req.body.name);
 		//if no error, user with that name already exists so a new account cannot be created
 		return res.status(500).send({message: 'user already exists'})
 	} catch (err) {
 		//if there is an error, no user exists with that username, so make a new user in the database and store the hashed password
 		passwordInput = req.body.pass;
-		bcrypt.genSalt(saltRounds, function(err, salt){
-			bcrypt.hash(passwordInput, salt, function(err, hash){
+		bcrypt.genSalt(saltRounds, async function(err, salt){
+			bcrypt.hash(passwordInput, salt, async function(err, hash){
 				try {
-					redisCLient.set(req.body.name, hash);
+					await redisCLient.set(req.body.name, hash);
 					return res.status(200).send({ message: 'Account created' });
 				} catch (err) {
 					return res.status(500).send({ message: 'Error logging data' });
@@ -127,9 +142,9 @@ app.post('/api/signup'), (req, res) => {
 }
 
 // API to log data to Redis
-app.post('/api/log', (req, res) => {
+app.post('/api/log', async (req, res) => {
     const { data } = req.body;
-    redisClient.set('lastData', data, (err) => {
+    await redisClient.set('lastData', data, (err) => {
         if (err) {
             return res.status(500).json({ message: 'Error logging data' });
         }
@@ -137,8 +152,8 @@ app.post('/api/log', (req, res) => {
     });
 });
 
-app.get('/api/last-logged', (req, res) => {
-    redisClient.get('lastData', (err, data) => {
+app.get('/api/last-logged', async (req, res) => {
+    await redisClient.get('lastData', (err, data) => {
         if (err) {
             return res.status(500).json({ message: 'Error fetching data' });
         }

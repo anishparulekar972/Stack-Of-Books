@@ -11,7 +11,17 @@ services:
       - /node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-  redis:
+      - REDIS_HOST=redis-docker
+      - REDIS_PORT=6379
+    depends_on:
+      - redis-docker
+  redis-docker:
     image: "redis:latest"
     ports:
       - "6379:6379"
+    command: redis-server --save 20 1
+    volumes:
+      - redisData:/data
+
+volumes:
+  redisData:

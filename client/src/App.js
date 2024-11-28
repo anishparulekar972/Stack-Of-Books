@@ -95,7 +95,7 @@ function App() {
   };
 
   const handleLogin = async () => {
-        await axios.post('http://localhost:5000/api/login', {
+        const response = await axios.post('http://localhost:5000/api/login', {
             name: username,
             pass: password
         })
@@ -119,22 +119,34 @@ function App() {
     };
 
     const handleSignup = async () => {
-        await axios.post('http://localhost:5000/api/signup',  {
-            name: username,
-            pass: password
-        })
-          .then((response) => response.json())
-          .then((result) => {
-              console.log(result.message);
-              setIsLoggedIn(true);
-              setAuthUser({
-                  name: {username}
-              });
-              closeModal();
-          })
-          .catch((error) => {
-              console.error(error);
-          });
+        const response = await axios({
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+            },
+            method: 'post',
+            url: 'http://localhost:5000/api/signup',
+            data: {
+                name: username,
+                pass: password
+            }
+        }).then((response) => {
+            response.json();
+            if (response.status === 500) {
+                //error signing up
+                console.log(response.message);
+            } else {
+                console.log(response.message);
+                setIsLoggedIn(true);
+                setAuthUser({
+                    name: {username}
+                });
+                closeModal();
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     };
 
   return (
