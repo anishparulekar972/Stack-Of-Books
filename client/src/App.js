@@ -59,7 +59,10 @@ function App() {
     }
 
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setIsMenuOpen(false);
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,11 +122,10 @@ function App() {
     };
 
     const handleSignup = async () => {
+        // e.preventDefault();
         const response = await axios({
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin' : '*',
-                'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+                'Content-Type': 'application/json'
             },
             method: 'post',
             url: 'http://localhost:5000/api/signup',
@@ -153,7 +155,7 @@ function App() {
    <AuthProvider>
     <div className="container">
       <div className="button-container">
-        <button onClick={openModal}>Login</button>
+        
         {isLoggedIn ? (
             <p> logged in </p>
         ) : (
@@ -175,6 +177,7 @@ function App() {
         {/* Menu Items */}
         {isMenuOpen && (
           <div className="menu-items">
+            <button onClick={() => openModal}>Login</button>
             <Link to="/" onClick={() => setIsMenuOpen(false)}>Signup</Link>
             <Link to="/about" onClick={() => setIsMenuOpen(false)}>About Us</Link>
             <a href="#" onClick={() => setIsMenuOpen(false)}>Contact</a>

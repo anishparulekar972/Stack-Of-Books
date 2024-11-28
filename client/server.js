@@ -13,6 +13,14 @@ app.use(cors({
 	origin: "http://localhost:3000"
 }));
 
+var allowCrossDomain = function (req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+	res.header('Access-Control-Allow-Headers', 'Contet-Type');
+};
+
+app.use(allowCrossDomain);
+
 // Redis Client
 const redisClient = redis.createClient({
 	url:  `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
