@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Tesseract from 'tesseract.js';
-import cv from 'opencv.js';
+
 
 const OCRUploader = ({ setInfoText }) => {
   const [processing, setProcessing] = useState(false);
