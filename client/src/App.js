@@ -122,7 +122,7 @@ function App() {
             <button onClick={(e) => handleSubmit(e)}>Scan the ISBN</button>
           </div>
           <div>
-            <InfoFromCamera setInfoText={setIsbn} />
+            <InfoFromCamera setInfoText={setIsbn} errorMsg={setErrorMsg}/>
           </div>
         </>
       )}

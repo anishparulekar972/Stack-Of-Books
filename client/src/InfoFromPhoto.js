@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Tesseract from 'tesseract.js';
 
 
-const OCRUploader = ({ setInfoText }) => {
+const OCRUploader = ({ setInfoText, errorMsg }) => {
   const [processing, setProcessing] = useState(false);
 
   const handleFileUpload = (e) => {
@@ -13,10 +13,10 @@ const OCRUploader = ({ setInfoText }) => {
     setProcessing(true);
 
     const extractISBN = (text) => {
-        const regex = /ISBN\s([\d-]{13,17})/; // Match "ISBN" followed by 13 or 17 characters (digits or dashes)
+        const regex = /ISBN\s([\d-/]{13})/; // Match "ISBN" followed by 13 or 17 characters (digits or dashes)
         const match = text.match(regex);  // Apply regex to the text
-        console.log(match);
-        return match ? match[1].replace(/-/g, '') : null;   
+        if (match == null) errorMsg("Could not read ISBN from picture") 
+        return match ? match[1].replace(/[-/ ]/g, '') : null;   
       };
 
     Tesseract.recognize( file, 'eng', { logger: (m) => console.log(m), tessedit_char_whitelist: '0123456789', psm: 7, } )
