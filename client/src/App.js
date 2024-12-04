@@ -5,6 +5,8 @@ import Axios from 'axios';
 import { ActionIcon } from '@mantine/core';
 import { IconSquareXFilled, IconMenu2 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import InfoFromCamera from './InfoFromPhoto';
+import Sidebar from './Sidebar';
 
 function App() {
   const [isbn, setIsbn] = useState("");
@@ -74,6 +76,7 @@ function App() {
           </div>
         )}
       </div>
+      <Sidebar />
       <h1>Stack Of Books</h1>
       {isBookOpen ? (
         <>
@@ -119,6 +122,9 @@ function App() {
           {errorMsg && <p className="error-msg">{errorMsg}</p>} {/* Display error message */}
           <div className="button-container">
             <button onClick={(e) => handleSubmit(e)}>Scan the ISBN</button>
+          </div>
+          <div>
+            <InfoFromCamera setInfoText={setIsbn} errorMsg={setErrorMsg}/>
           </div>
         </>
       )}
