@@ -63,7 +63,7 @@ function App() {
           aria-label="Menu"
           className="menu-icon"
         >
-          <IconMenu2 style={{ width: '70%', height: '70%' }} stroke={1.5} />
+          <IconMenu2 style={{ width: '30px', height: '30px' }} stroke={1.5} />
         </ActionIcon>
         
         {/* Menu Items */}
@@ -130,10 +130,6 @@ function App() {
       )}
 
       <footer className="footer">
-        <ul>
-          <li><a href="/">Our Group</a></li>
-          <Link to="/about">About us</Link>
-        </ul>
         <p>&copy; 2024 Stack Of Books</p>
       </footer>
     </div>
