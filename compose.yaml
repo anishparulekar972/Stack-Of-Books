@@ -6,13 +6,18 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-      - "5000:5000"
+      - "5001:5000"
     volumes:
-      - ./client:/src
-      - /node_modules
+      - ./client:/client
+      - /client/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - REDIS_HOST=redis # Example environment variable to define Redis host
+      - REDIS_PORT=6379  # Optional: Redis port, if needed
   redis:
     image: "redis:latest"
     ports:
       - "6379:6379"
+networks:
+  default:
+    name: my-custom-network # Optional: define a custom network name

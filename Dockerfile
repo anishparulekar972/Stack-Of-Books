@@ -2,16 +2,16 @@
 FROM node:18
 
 # Set the working directory in the container
-WORKDIR ./client
+WORKDIR /client
 
-# Copy the package.json and package-lock.json files
-COPY package*.json ./
+# Copy only the client folder
+COPY client/package*.json ./
 
 # Install the dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY . .
+COPY client ./
 
 # Build the React app for production
 # RUN npm run build
