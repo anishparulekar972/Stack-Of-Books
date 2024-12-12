@@ -121,7 +121,7 @@ function App() {
           </div>
           {errorMsg && <p className="error-msg">{errorMsg}</p>} {/* Display error message */}
           <div className="button-container">
-            <button onClick={(e) => handleSubmit(e)}>Scan the ISBN</button>
+            <button onClick={(e) => handleSubmit(e)}>Search the ISBN</button>
           </div>
           <div>
             <InfoFromCamera setInfoText={setIsbn} errorMsg={setErrorMsg}/>
