@@ -13,8 +13,10 @@ const OCRUploader = ({ setInfoText, errorMsg }) => {
     setProcessing(true);
 
     const extractISBN = (text) => {
-        const regex = /ISBN\s([\d-/]{13})/; // Match "ISBN" followed by 13 or 17 characters (digits or dashes)
+        const regex = /ISBN\s([\d-/]{13,17})/; // Match "ISBN" followed by 13 or 17 characters (digits or dashes)
         const match = text.match(regex);  // Apply regex to the text
+        console.log(text)
+        console.log(match)
         if (match == null) errorMsg("Could not read ISBN from picture") 
         return match ? match[1].replace(/[-/ ]/g, '') : null;   
       };
@@ -23,7 +25,6 @@ const OCRUploader = ({ setInfoText, errorMsg }) => {
       .then(({ data: { text } }) => {
         // Convert extracted text to JSON
         const result = { extractedText: text };
-        console.log(result);
         setInfoText(extractISBN(result.extractedText));
       })
       .catch((err) => { console.error("Error processing image:", err);})
